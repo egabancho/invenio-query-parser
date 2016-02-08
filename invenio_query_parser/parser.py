@@ -184,7 +184,7 @@ class KeywordQuery(BinaryRule):
 
 KeywordQuery.grammar = [
     (
-        attr('left', KeywordRule),
+        attr('left', NestableKeyword),
         omit(_, Literal(':'), _),
         attr('right', KeywordQuery)
     ),

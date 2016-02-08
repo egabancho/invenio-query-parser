@@ -219,7 +219,7 @@ class TestElasticsearchDSL(object):
         })
 
     test_second_order_operator = (
-        'first:second:bar',
+        'refersto:second:bar',
         None,
         RuntimeError
     )
