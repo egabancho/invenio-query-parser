@@ -98,17 +98,24 @@ class Or(object):
     ])
 
 
+class classproperty(property):
+    def __get__(self, cls, owner):
+        return self.fget.__get__(None, owner)()
+
+
 class KeywordRule(Keyword, LeafRule):
     # grammar = attr('value', re.compile(r"[\w\d]+(\.[\w\d]+)*"))
     Keyword.regex = re.compile(r"[\w\d]+(\.[\w\d]+)*")
 
     ALLOWED_KEYWORDS = None
 
-    try:
-        grammar = Enum(*[Keyword(k) for k in ALLOWED_KEYWORDS])
-    except TypeError:
-        # No need to do anything, no keywords, using default regex
-        pass
+    @classproperty
+    @classmethod
+    def grammar(cls):
+        try:
+            return Enum(*[Keyword(k) for k in KeywordRule.ALLOWED_KEYWORDS])
+        except TypeError:
+            raise Exception('A list of allowed keywords is needed.')
 
     @property
     def value(self):
@@ -139,7 +146,7 @@ class SimpleValue(LeafRule):
 
 class SimpleValueUnit(LeafRule):
     grammar = [
-        re.compile(r"[^\s\)\(:]+"),
+        re.compile(r"[^\s\)\(]+"),
         (re.compile(r'\('), SimpleValue, re.compile(r'\)')),
     ]
 

@@ -70,7 +70,7 @@ class TestParser(object):
             ['foo', 'year', 'cited', 'author', 'title', 'refersto', 'texkey',
              'da', 't', 'a', 'collaboration', 'aff', 'd', 'tc', 'j', 'af',
              'date', 'topcite', 'arXiv', 'foo.bar', 'a.b.c.d.f', '999',
-             '999C5', '999__u', 'foo1', 'foo2', 'foo3', 'foo4', ])
+             '035__a', '999C5', '999__u', 'foo1', 'foo2', 'foo3', 'foo4', ])
 
         cls.parser = converter.SpiresToInvenioSyntaxConverter()
 
@@ -547,4 +547,7 @@ class TestParser(object):
          KeywordOp(Keyword('foo.bar'), Value('baz'))),
         ("a.b.c.d.f:bar",
          KeywordOp(Keyword('a.b.c.d.f'), Value('bar'))),
+
+        ("035__a:oai:arXiv.org:1503.06238",
+         KeywordOp(Keyword('035__a'), Value('oai:arXiv.org:1503.06238')))
     )
