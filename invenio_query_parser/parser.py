@@ -28,7 +28,15 @@ from __future__ import absolute_import
 import re
 
 import pypeg2
-from pypeg2 import Keyword, Literal, attr, maybe_some, omit, optional, some
+from pypeg2 import (
+    Keyword,
+    Literal,
+    attr,
+    maybe_some,
+    omit,
+    optional,
+    some,
+    Enum)
 
 from . import ast
 from ._compat import string_types
@@ -90,8 +98,21 @@ class Or(object):
     ])
 
 
-class KeywordRule(LeafRule):
-    grammar = attr('value', re.compile(r"[\w\d]+(\.[\w\d]+)*"))
+class KeywordRule(Keyword, LeafRule):
+    # grammar = attr('value', re.compile(r"[\w\d]+(\.[\w\d]+)*"))
+    Keyword.regex = re.compile(r"[\w\d]+(\.[\w\d]+)*")
+
+    ALLOWED_KEYWORDS = None
+
+    try:
+        grammar = Enum(*[Keyword(k) for k in ALLOWED_KEYWORDS])
+    except TypeError:
+        # No need to do anything, no keywords, using default regex
+        pass
+
+    @property
+    def value(self):
+        return self.name
 
 
 class SingleQuotedString(LeafRule):
@@ -293,6 +314,7 @@ class EmptyQueryRule(LeafRule):
 
 
 class Main(UnaryRule):
+
     grammar = [
         (omit(_), attr('op', Query), omit(_)),
         attr('op', EmptyQueryRule),

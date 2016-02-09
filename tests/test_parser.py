@@ -65,6 +65,13 @@ class TestParser(object):
     @classmethod
     def setup_class(cls):
         from invenio_query_parser.contrib.spires import converter
+        from invenio_query_parser.parser import KeywordRule
+        KeywordRule.ALLOWED_KEYWORDS = set(
+            ['foo', 'year', 'cited', 'author', 'title', 'refersto', 'texkey',
+             'da', 't', 'a', 'collaboration', 'aff', 'd', 'tc', 'j', 'af',
+             'date', 'topcite', 'arXiv', 'foo.bar', 'a.b.c.d.f', '999',
+             '999C5', '999__u', 'foo1', 'foo2', 'foo3', 'foo4', ])
+
         cls.parser = converter.SpiresToInvenioSyntaxConverter()
 
     queries = (
